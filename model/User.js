@@ -7,6 +7,7 @@ const userSchema = new Schema(
     password: { type: Buffer, required: true },
     firstName: { type: String },
     lastName: { type: String },
+    
     salt: Buffer,
     resetPasswordToken: { type: String, default: "" },
   },

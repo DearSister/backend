@@ -4,16 +4,31 @@ import mongoose from "mongoose";
 import LoginRoutes from "./routes/authorization_authentication/LoginRoutes.js";
 import bodyParser from "body-parser";
 import SignUpRoutes from "./routes/authorization_authentication/SignUpRoutes.js";
+import verifyToken from "./routes/authorization_authentication/Authentication.js";
+import Dashboard from "./routes/user/Dashboard.js";
+import AddQuestion from "./routes/quiz/AddQuestion.js";
+import QuizData from "./routes/quiz/QuizData.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 const app = express();
 
 dotenv.config();
 /* <------------------MiddleWares--------------------> */
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with your frontend's origin
+    credentials: true,
+  })
+);
+app.use(express.urlencoded({ extended: true }));
 /* <------------------Routes------------------------->  */
 app.use("/login", LoginRoutes);
 app.use("/signup", SignUpRoutes);
+app.use("/user", verifyToken, Dashboard);
+app.use("/quiz", verifyToken, QuizData);
+app.use("/addquestion", AddQuestion);
 
 /* <-------------------Connection Established And MongoDb Connection-------------->  */
 app.listen(process.env.PORT, () => {
